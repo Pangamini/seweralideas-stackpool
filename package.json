@@ -1,0 +1,10 @@
+{
+  "name": "com.seweralideas.stackpool",
+  "version": "0.1.0",
+  "displayName": "StackPool",
+  "description": "Generic object pool",
+  "author": {
+    "name": "Boleslav Horak",
+    "email": "seweralideas@gmail.com"
+  }
+}
