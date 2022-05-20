@@ -1,9 +1,8 @@
-﻿
-using System.Text;
+﻿using System.Text;
 
 namespace SeweralIdeas.Pooling
 {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_5_3_OR_NEWER
     [UnityEngine.Scripting.Preserve]
 #endif
     public class StringBuilderPool : StackPool<StringBuilder>

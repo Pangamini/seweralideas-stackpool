@@ -43,6 +43,7 @@ namespace SeweralIdeas.Pooling
     }
 
 #if UNITY
+    [UnityEngine.Scripting.Preserve]
     public class GameObjectPool : StackPool<UnityEngine.GameObject>
     {
         protected override UnityEngine.GameObject Alloc()
