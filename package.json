@@ -1,6 +1,6 @@
 {
   "name": "com.seweralideas.stackpool",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "StackPool",
   "description": "Generic object pool",
   "author": {
