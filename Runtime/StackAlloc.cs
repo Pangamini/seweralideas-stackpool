@@ -5,17 +5,18 @@ namespace SeweralIdeas.Pooling
     
     public struct StackAlloc<T> : IDisposable where T : class
     {
-        private static StackPool<T> s_pool = StackPoolLibrary.GetInstance().FindPool<T>();
+        private StackPool<T> m_pool;
 
-        public StackAlloc(out T variable)
+        public StackAlloc(StackPool<T> pool, out T variable)
         {
-            obj = s_pool.Take();
+            m_pool = pool;
+            obj = m_pool.Take();
             variable = obj;
         }
 
         public void Dispose()
         {
-            s_pool.Return(obj);
+            m_pool.Return(obj);
             obj = null;
         }
 
@@ -27,10 +28,8 @@ namespace SeweralIdeas.Pooling
 
     public static class StackAlloc
     {
-        public static StackAlloc<T> Get<T>(out T variable) where T : class
-        {
-            return new StackAlloc<T>(out variable);
-        }
+        [Obsolete("No longer supported. Use the pool type explicitly.", true)]
+        public static StackAlloc<T> Get<T>(out T variable) where T : class => throw new NotSupportedException();
     }
 
 }

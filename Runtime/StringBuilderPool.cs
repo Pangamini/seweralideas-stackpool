@@ -5,7 +5,7 @@ namespace SeweralIdeas.Pooling
 #if UNITY_5_3_OR_NEWER
     [UnityEngine.Scripting.Preserve]
 #endif
-    public class StringBuilderPool : StackPool<StringBuilder>
+    public class StringBuilderPool : StackPool<StringBuilder, StringBuilderPool>
     {
         protected override StringBuilder Alloc()
         {

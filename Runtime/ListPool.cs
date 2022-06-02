@@ -1,60 +1,37 @@
-﻿
-#if UNITY_5_3_OR_NEWER
+﻿#if UNITY_5_3_OR_NEWER
 #define UNITY
-using UnityEngine;
 #endif
+
+using System.Collections.Generic;
 
 namespace SeweralIdeas.Pooling
 {
-    public class ListPool<T> : StackPool<System.Collections.Generic.List<T>>
+    public sealed class ListPool<T> : StackPool<List<T>, ListPool<T>>
     {
-        protected override System.Collections.Generic.List<T> Alloc()
-        {
-            return new System.Collections.Generic.List<T>();
-        }
+        protected override List<T> Alloc() => new List<T>();
 
-        protected override void Finalize(System.Collections.Generic.List<T> obj)
-        {
-            obj.Clear();
-        }
+        protected override void Finalize(List<T> obj) => obj.Clear();
 
-        protected override void Prepare(System.Collections.Generic.List<T> obj)
-        {
-            obj.Clear();
-        }
+        protected override void Prepare(List<T> obj) => obj.Clear();
+        
     }
 
-    public class SortedListPool<TKey, TVal> : StackPool<System.Collections.Generic.SortedList<TKey, TVal>>
+    public sealed class SortedListPool<TKey, TVal> : StackPool<SortedList<TKey, TVal>, SortedListPool<TKey, TVal>>
     {
-        protected override System.Collections.Generic.SortedList<TKey, TVal> Alloc()
-        {
-            return new System.Collections.Generic.SortedList<TKey, TVal>();
-        }
+        protected override SortedList<TKey, TVal> Alloc() => new SortedList<TKey, TVal>();
 
-        protected override void Finalize(System.Collections.Generic.SortedList<TKey, TVal> obj)
-        {
-            obj.Clear();
-        }
+        protected override void Finalize(SortedList<TKey, TVal> obj) => obj.Clear();
 
-        protected override void Prepare(System.Collections.Generic.SortedList<TKey, TVal> obj)
-        {
-            obj.Clear();
-        }
+        protected override void Prepare(SortedList<TKey, TVal> obj) => obj.Clear();
     }
 
 #if UNITY
     [UnityEngine.Scripting.Preserve]
-    public class GameObjectPool : StackPool<UnityEngine.GameObject>
+    public class GameObjectPool : StackPool<UnityEngine.GameObject, GameObjectPool>
     {
-        protected override UnityEngine.GameObject Alloc()
-        {
-            return new UnityEngine.GameObject();
-        }
+        protected override UnityEngine.GameObject Alloc() => new UnityEngine.GameObject();
 
-        protected override void Finalize(UnityEngine.GameObject obj)
-        {
-            obj.SetActive(false);
-        }
+        protected override void Finalize(UnityEngine.GameObject obj) => obj.SetActive(false);
 
         protected override void Prepare(UnityEngine.GameObject obj)
         {
