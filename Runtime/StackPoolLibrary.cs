@@ -5,6 +5,7 @@ using UnityEngine;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace SeweralIdeas.Pooling
@@ -131,6 +132,7 @@ namespace SeweralIdeas.Pooling
                     {
                         var genArgs = objType.GetGenericArguments();
                         poolType = poolType.MakeGenericType(genArgs);
+                        WriteLine($"{nameof(StackPoolLibrary)} making PoolType \"{GetTypeDisplayName(poolType)}\" for \"{GetTypeDisplayName(objType)}\"");
                     }
                 }
 
@@ -139,6 +141,29 @@ namespace SeweralIdeas.Pooling
             }
         }
 
+        private static void WriteLine(string s)
+        {
+#if UNITY
+            Debug.Log(s);
+#else
+            Console.WriteLine(s);
+#endif
+        }
+
+        public static string GetTypeDisplayName(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string name = type.Name.Substring(0, type.Name.Length - 2);
+                string args = string.Join(", ", from arg in type.GenericTypeArguments select GetTypeDisplayName(arg));
+                return $"{name}<{args}>";
+            }
+            else
+            {
+                return type.Name;
+            }
+        }
+        
         //ensures per-thread instance
         public static StackPoolLibrary GetInstance()
         {
