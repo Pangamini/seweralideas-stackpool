@@ -3,16 +3,17 @@ using System.Collections.Generic;
 
 namespace SeweralIdeas.Pooling
 {
-    abstract public class StackPoolBase
+    public abstract class StackPoolBase
     {
-        abstract public System.Type GetElementType();
-        abstract public int pooledCount { get; }
+        public abstract System.Type GetElementType();
+        public abstract int pooledCount { get; }
 
 #if DEBUG
         private static HashSet<System.WeakReference> s_allStackPools = new HashSet<System.WeakReference>();
 
         private System.WeakReference m_weakRef;
-        public StackPoolBase()
+
+        protected StackPoolBase()
         {
             lock (s_allStackPools)
             {
@@ -49,18 +50,13 @@ namespace SeweralIdeas.Pooling
     DO NOT keep the reference to popped object after it's been pushed back to the pool.
     */
 
-    abstract public class StackPool<T> : StackPoolBase where T : class
-    {   
-        private ConcurrentBag<T> m_bag = new ConcurrentBag<T>();
-        
-        public override int pooledCount
-        { get { return m_bag.Count; }}
+    public abstract class StackPool<T> : StackPoolBase
+    {
+        public override int pooledCount => m_bag.Count;
 
-        override public System.Type GetElementType()
-        {
-            return typeof(T);
-        }
+        public override System.Type GetElementType() => typeof(T);
 
+        private readonly ConcurrentBag<T> m_bag = new ConcurrentBag<T>();
         public T Take()
         {
             if (!m_bag.TryTake(out T obj))
@@ -74,7 +70,7 @@ namespace SeweralIdeas.Pooling
             Finalize(obj);
             m_bag.Add(obj);
         }
-        
+
         protected abstract T Alloc();
 
         /////////////////////////////////////////////////////////////////////
@@ -91,23 +87,21 @@ namespace SeweralIdeas.Pooling
 
         protected virtual void Prepare(T obj) { }
     }
+    
+    public abstract class StackPool<T, TPool> : StackPool<T> where T : class where TPool : StackPool<T, TPool>, new()
+    {          
+        private static readonly TPool s_instance = new TPool();
+        public static StackAlloc<T> Get(out T obj) => new StackAlloc<T>(s_instance, out obj);
 
-    public class BasicStackPool<T> : StackPool<T> where T:class, new()
+    }
+
+    /// <summary>
+    /// A StackPool that implements Alloc using default constructor
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class BasicStackPool<T, TPool> : StackPool<T, TPool> where T:class, new() where TPool:BasicStackPool<T, TPool>, new()
     {
-        protected override T Alloc()
-        {
-            return new T();
-        }
-
-        /// <summary>
-        /// Used to ensure that AOT version exists when using IL2CPP
-        /// </summary>
-#if UNITY_EDITOR || UNITY_STANDALONE
-        [UnityEngine.Scripting.Preserve]
-#endif
-        public static void InitializeType()
-        {
-
-        }
+        protected sealed override T Alloc() => new T();
+        protected sealed override void Finalize(T obj) => base.Finalize(obj);
     }
 }
