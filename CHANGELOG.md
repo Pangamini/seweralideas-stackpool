@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.1]
+### Changed
+- Made the static instance public.
+- BasicStackPool.Finalize is no longer sealed.
 ## [0.2.0]
 ### Removed
 - StackPoolLibrary was removed completely in favor of using StackPool derived types explicitly. This avoids the potentially ambiguous selection of the pool, together with issues where the StackPool type might not exist on AOT platforms. 
