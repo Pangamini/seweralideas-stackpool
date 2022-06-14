@@ -90,8 +90,8 @@ namespace SeweralIdeas.Pooling
     
     public abstract class StackPool<T, TPool> : StackPool<T> where T : class where TPool : StackPool<T, TPool>, new()
     {          
-        private static readonly TPool s_instance = new TPool();
-        public static StackAlloc<T> Get(out T obj) => new StackAlloc<T>(s_instance, out obj);
+        public static readonly TPool Instance = new TPool();
+        public static StackAlloc<T> Get(out T obj) => new StackAlloc<T>(Instance, out obj);
 
     }
 
@@ -102,6 +102,5 @@ namespace SeweralIdeas.Pooling
     public abstract class BasicStackPool<T, TPool> : StackPool<T, TPool> where T:class, new() where TPool:BasicStackPool<T, TPool>, new()
     {
         protected sealed override T Alloc() => new T();
-        protected sealed override void Finalize(T obj) => base.Finalize(obj);
     }
 }
