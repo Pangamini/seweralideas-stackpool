@@ -1,35 +1,28 @@
-﻿using System;
-
+﻿using System.Diagnostics;
 namespace SeweralIdeas.Pooling
 {
     
     public struct StackAlloc<T> : IDisposable where T : class
     {
-        private StackPool<T> m_pool;
+        private readonly StackPool<T> m_pool;
 
         public StackAlloc(StackPool<T> pool, out T variable)
         {
             m_pool = pool;
-            obj = m_pool.Take();
-            variable = obj;
+            Obj = m_pool.Take();
+            variable = Obj;
         }
 
         public void Dispose()
         {
-            m_pool.Return(obj);
-            obj = null;
+            Debug.Assert(Obj != null);
+            m_pool.Return(Obj);
+            Obj = default;
         }
 
-        public T obj
+        public T? Obj
         {
             get; private set;
         }
     }
-
-    public static class StackAlloc
-    {
-        [Obsolete("No longer supported. Use the pool type explicitly.", true)]
-        public static StackAlloc<T> Get<T>(out T variable) where T : class => throw new NotSupportedException();
-    }
-
 }
