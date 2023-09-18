@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace SeweralIdeas.Pooling
 {
@@ -54,12 +53,12 @@ namespace SeweralIdeas.Pooling
     {
         public override int pooledCount => m_bag.Count;
 
-        public override System.Type GetElementType() => typeof(T);
+        public override Type GetElementType() => typeof(T);
 
         private readonly ConcurrentBag<T> m_bag = new ConcurrentBag<T>();
         public T Take()
         {
-            if (!m_bag.TryTake(out T obj))
+            if (!m_bag.TryTake(out T? obj))
                 obj = Alloc();
             Prepare(obj);
             return obj;

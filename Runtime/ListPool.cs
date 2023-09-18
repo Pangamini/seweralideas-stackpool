@@ -2,8 +2,6 @@
 #define UNITY
 #endif
 
-using System.Collections.Generic;
-
 namespace SeweralIdeas.Pooling
 {
     public sealed class ListPool<T> : StackPool<List<T>, ListPool<T>>
@@ -16,7 +14,7 @@ namespace SeweralIdeas.Pooling
         
     }
 
-    public sealed class SortedListPool<TKey, TVal> : StackPool<SortedList<TKey, TVal>, SortedListPool<TKey, TVal>>
+    public sealed class SortedListPool<TKey, TVal> : StackPool<SortedList<TKey, TVal>, SortedListPool<TKey, TVal>> where TKey : notnull
     {
         protected override SortedList<TKey, TVal> Alloc() => new SortedList<TKey, TVal>();
 
