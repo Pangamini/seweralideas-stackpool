@@ -1,4 +1,5 @@
-﻿namespace SeweralIdeas.Pooling
+﻿using System.Collections.Generic;
+namespace SeweralIdeas.Pooling
 {
     public class HashSetPool<T> : StackPool<HashSet<T>, HashSetPool<T>>
     {
