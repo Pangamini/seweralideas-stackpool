@@ -2,6 +2,8 @@
 #define UNITY
 #endif
 
+using System.Collections.Generic;
+
 namespace SeweralIdeas.Pooling
 {
     public sealed class ListPool<T> : StackPool<List<T>, ListPool<T>>
